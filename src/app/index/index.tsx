@@ -13,6 +13,8 @@ import { categories } from "@/utils/categories"
 import { linkStorage, LinkStorage } from "@/storage/link-storage"
 
 export default function Index() {
+    const [showModal, setShowModal] = useState(false)
+    const [link, setLink] = useState<LinkStorage>({} as LinkStorage)
     const [links, setLinks] = useState<LinkStorage[]>([])
     const [category, setCategory] = useState<string>(categories[0].id)
 
@@ -27,6 +29,35 @@ export default function Index() {
             Alert.alert("Erro", "Não foi possível carregar os links")
             console.log(error)
         }
+    }
+
+    function handleDetails(selected: LinkStorage) {
+        setShowModal(true)
+        setLink(selected)
+    }
+
+    async function linkRemove() {
+        try {
+            await linkStorage.remove(link.id)
+            await getLinks()
+            setShowModal(false)
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível excluir o link")
+            console.log(error)
+        }
+    }
+
+    function handleDelete() {
+        Alert.alert("Excluir", "Deseja realmente excluir este link?", [
+            {
+                text: "Não",
+                style: "cancel"
+            },
+            {
+                text: "Sim",
+                onPress: linkRemove
+            }
+        ])
     }
 
     useFocusEffect(
@@ -56,28 +87,30 @@ export default function Index() {
                 <FlatList
                     data={links}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => <Link name={item.name} url={item.url} onDetails={() => { }} />}
+                    renderItem={({ item }) => <Link name={item.name} url={item.url} onDetails={() => handleDetails(item)} />}
                     style={styles.links}
                     contentContainerStyle={styles.linksContent}
                     showsVerticalScrollIndicator={false}
                 />
             )}
 
-            <Modal transparent visible={false}>
+            <Modal transparent visible={showModal} animationType="slide">
                 <View style={styles.modal}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalCategory}>Curso</Text>
-                            <TouchableOpacity>
+                            <Text style={styles.modalCategory}>
+                                {categories.find((c) => c.id === link.category)?.name}
+                            </Text>
+                            <TouchableOpacity onPress={() => setShowModal(false)}>
                                 <MaterialIcons name="close" size={20} color={colors.gray[400]} />
                             </TouchableOpacity>
                         </View>
 
-                        <Text style={styles.modalLinkName}>Rocketseat</Text>
-                        <Text style={styles.modalUrl}>https://rocketseat.com.br</Text>
+                        <Text style={styles.modalLinkName}>{link.name}</Text>
+                        <Text style={styles.modalUrl}>{link.url}</Text>
 
                         <View style={styles.modalFooter}>
-                            <Option name="Excluir" icon="delete" variant="secondary" />
+                            <Option name="Excluir" icon="delete" variant="secondary" onPress={handleDelete} />
                             <Option name="Abrir" icon="language" />
                         </View>
                     </View>
