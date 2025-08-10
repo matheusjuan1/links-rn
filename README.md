@@ -24,9 +24,7 @@ Links é um aplicativo mobile para organizar links da web, desenvolvido em **Rea
 ## 🚀 Funcionalidades
 
 - **Adicionar e Nomear Links**: Crie e salve novos links, atribuindo-lhes um nome personalizado.
-
 - **Categorização**: Organize seus links em categorias para mantê-los bem estruturados.
-
 - **Armazenamento Local**: Todos os dados são salvos e recuperados do armazenamento interno do dispositivo, usando o ``Async Storage``.
 
 ## 📱 Capturas de Tela
