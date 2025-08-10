@@ -32,6 +32,17 @@ export const styles = StyleSheet.create({
         padding: 24,
         paddingBottom: 100
     },
+    empty: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        borderTopWidth: 1,
+        borderTopColor: colors.gray[600]
+    },
+    emptyText: {
+        color: colors.gray[400],
+        fontSize: 16
+    },
     modal: {
         flex: 1,
         justifyContent: "flex-end"
